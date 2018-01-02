@@ -31,6 +31,7 @@ public class Robot extends SampleRobot {
 		robotDrive = new RobotDrive(kFrontLeftChannel, kRearLeftChannel, kFrontRightChannel, kRearRightChannel);
 		robotDrive.setInvertedMotor(MotorType.kFrontLeft, true); 
 		robotDrive.setInvertedMotor(MotorType.kRearLeft, true); 
+		// Add Camera Code to show on SmartDashboard
 		camServer = CameraServer.getInstance();
 	    camServer.startAutomaticCapture();	
 		robotDrive.setExpiration(0.1);
