@@ -1,5 +1,6 @@
 package org.usfirst.frc.team5484.robot;
 
+import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.RobotDrive.MotorType;
@@ -13,6 +14,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class Robot extends SampleRobot {
 	RobotDrive robotDrive;
+	CameraServer camServer;
 
 	// Channels for the wheels
 	final int kFrontLeftChannel = 9;
@@ -27,14 +29,10 @@ public class Robot extends SampleRobot {
 
 	public Robot() {
 		robotDrive = new RobotDrive(kFrontLeftChannel, kRearLeftChannel, kFrontRightChannel, kRearRightChannel);
-		robotDrive.setInvertedMotor(MotorType.kFrontLeft, true); // invert the
-																	// left side
-																	// motors
-		robotDrive.setInvertedMotor(MotorType.kRearLeft, true); // you may need
-																// to change or
-																// remove this
-																// to match your
-																// robot
+		robotDrive.setInvertedMotor(MotorType.kFrontLeft, true); 
+		robotDrive.setInvertedMotor(MotorType.kRearLeft, true); 
+		camServer = CameraServer.getInstance();
+	    camServer.startAutomaticCapture();	
 		robotDrive.setExpiration(0.1);
 	}
 
