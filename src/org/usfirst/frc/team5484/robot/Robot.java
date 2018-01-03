@@ -1,18 +1,22 @@
 package org.usfirst.frc.team5484.robot;
 
 import edu.wpi.first.wpilibj.CameraServer;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.RobotDrive.MotorType;
+import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.SampleRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import com.kauailabs.navx.frc.AHRS;
 
 /**
  * This is a demo program showing how to use Mecanum control with the RobotDrive
  * class.
  */
 public class Robot extends SampleRobot {
+	AHRS ahrs;
 	RobotDrive robotDrive;
 	CameraServer camServer;
 
@@ -35,6 +39,13 @@ public class Robot extends SampleRobot {
 		camServer = CameraServer.getInstance();
 	    camServer.startAutomaticCapture();	
 		robotDrive.setExpiration(0.1);
+		try {
+			ahrs = new AHRS(SPI.Port.kMXP);
+		}
+		catch(RuntimeException ex)
+		{
+			DriverStation.reportError("Error instantiating navX-MXP:  " + ex.getMessage(), true);
+		}
 	}
 
 	/**
@@ -56,12 +67,22 @@ public class Robot extends SampleRobot {
 			SmartDashboard.putDouble("Y axis: ", y);
 			SmartDashboard.putDouble("z axis: ", z);
 			SmartDashboard.putDouble("Throttle: ", Math.round(t*100));
+			SmartDashboard.putDouble("navX Angel: ", ahrs.getAngle());
+			
+			if(stick.getTrigger())
+			{
+				ahrs.reset();
+			}
+			try {
+				robotDrive.mecanumDrive_Cartesian(x, y, z, ahrs.getAngle());
+			}
+			catch(RuntimeException ex) {
+				DriverStation.reportError("Error communicating with drive system:  " + ex.getMessage(), true);
+			}
+		}
 			
 			
-			
-			robotDrive.mecanumDrive_Cartesian(x, y, z, 0);
 
 			Timer.delay(0.005); // wait 5ms to avoid hogging CPU cycles
-		}
 	}
 }
