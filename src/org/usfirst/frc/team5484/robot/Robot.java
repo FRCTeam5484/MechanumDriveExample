@@ -90,7 +90,7 @@ public class Robot extends SampleRobot implements PIDOutput {
 			SmartDashboard.putDouble("z axis: ", z);
 			//SmartDashboard.putDouble("Throttle: ", Math.round(t*100));
 			SmartDashboard.putDouble("navX Angel: ", ahrs.getAngle());
-			/*
+			/* committed out joystick drive.
 			if(stick.getTrigger())
 			{
 				ahrs.reset();
