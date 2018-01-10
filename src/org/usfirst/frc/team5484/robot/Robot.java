@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.SampleRobot;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import com.kauailabs.navx.frc.AHRS;
 
@@ -41,7 +42,8 @@ public class Robot extends SampleRobot implements PIDOutput {
 	// The channel on the driver station that the joystick is connected to
 	final int kJoystickChannel = 0;
 
-	Joystick stick = new Joystick(kJoystickChannel);
+	//Joystick stick = new Joystick(kJoystickChannel);
+	XboxController xbox = new XboxController(0);
 
 	public Robot() {
 		robotDrive = new RobotDrive(kFrontLeftChannel, kRearLeftChannel, kFrontRightChannel, kRearRightChannel);
@@ -75,20 +77,20 @@ public class Robot extends SampleRobot implements PIDOutput {
 		robotDrive.setSafetyEnabled(true);
 		while (isOperatorControl() && isEnabled()) {
 			boolean rotateToAngle = false;
-			double x = stick.getX();
-			double y = stick.getY();
-			double z = stick.getZ();
-			double t = stick.getThrottle();
-			t = (-(t+1)/2)+1;
-			x = x*t;
-			y = y*t;
-			z = -(z*t);
+			double x = xbox.getRawAxis(1);
+			double y = xbox.getRawAxis(0);
+			double z = -xbox.getRawAxis(4);
+			//double t = stick.getThrottle();
+			//t = (-(t+1)/2)+1;
+			//x = x*t;
+			//y = y*t;
+			//z = -(z*t);
 			SmartDashboard.putDouble("X axis: ", x);
 			SmartDashboard.putDouble("Y axis: ", y);
 			SmartDashboard.putDouble("z axis: ", z);
-			SmartDashboard.putDouble("Throttle: ", Math.round(t*100));
+			//SmartDashboard.putDouble("Throttle: ", Math.round(t*100));
 			SmartDashboard.putDouble("navX Angel: ", ahrs.getAngle());
-			
+			/*
 			if(stick.getTrigger())
 			{
 				ahrs.reset();
@@ -125,6 +127,8 @@ public class Robot extends SampleRobot implements PIDOutput {
 			catch(RuntimeException ex) {
 				DriverStation.reportError("Error communicating with drive system:  " + ex.getMessage(), true);
 			}
+			*/
+			robotDrive.mecanumDrive_Cartesian(y, x, z, 0);
 		}
 		Timer.delay(0.005); // wait 5ms to avoid hogging CPU cycles
 	}
